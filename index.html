@@ -418,5 +418,141 @@
 })();
 </script>
 
+
+<!-- /* AUTO_SEARCH_SUGGESTION */ -->
+<style>
+#universal-search-dropdown {
+    position: fixed !important;
+    background: #18181b !important;
+    border: 1px solid #3f3f46 !important;
+    border-radius: 8px !important;
+    max-height: 380px !important;
+    overflow-y: auto !important;
+    z-index: 9999999 !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.85) !important;
+    display: none;
+}
+.uni-sug-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #27272a !important;
+    cursor: pointer !important;
+    text-align: left !important;
+}
+.uni-sug-item:hover, .uni-sug-item:active {
+    background: #27272a !important;
+}
+.uni-sug-thumb {
+    width: 40px !important;
+    height: 52px !important;
+    object-fit: cover !important;
+    border-radius: 4px !important;
+    flex-shrink: 0 !important;
+}
+.uni-sug-title {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #f4f4f5 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+.uni-sug-sub {
+    font-size: 11px !important;
+    color: #a1a1aa !important;
+    margin-top: 2px !important;
+}
+</style>
+
+<script>
+(function() {
+    let drop = document.createElement("div");
+    drop.id = "universal-search-dropdown";
+    document.body.appendChild(drop);
+
+    let timer = null;
+
+    function updatePos(inputEl) {
+        let rect = inputEl.getBoundingClientRect();
+        drop.style.top = (rect.bottom + 6) + "px";
+        drop.style.left = rect.left + "px";
+        drop.style.width = rect.width + "px";
+    }
+
+    // Bắt sự kiện gõ trên toàn bộ trang bất kể ô tìm kiếm xuất hiện lúc nào
+    document.addEventListener("input", function(e) {
+        let target = e.target;
+        if (!target.matches("input") && target.getAttribute("type") !== "search" && target.getAttribute("type") !== "text") return;
+
+        let q = target.value.trim();
+        clearTimeout(timer);
+
+        if (q.length < 2) {
+            drop.style.display = "none";
+            return;
+        }
+
+        updatePos(target);
+
+        timer = setTimeout(async () => {
+            try {
+                let res = await fetch("https://phimapi.com/v1/api/tim-kiem?keyword=" + encodeURIComponent(q) + "&limit=8");
+                let data = await res.json();
+                let items = data?.data?.items || [];
+
+                if (items.length === 0) {
+                    drop.innerHTML = `<div style="padding: 12px; color: #71717a; text-align: center; font-size: 12px;">Không có phim phù hợp</div>`;
+                    drop.style.display = "block";
+                    return;
+                }
+
+                drop.innerHTML = items.map(m => `
+                    <div class="uni-sug-item" data-slug="${m.slug}">
+                        <img class="uni-sug-thumb" src="https://phimimg.com/${m.poster_url}" referrerpolicy="no-referrer">
+                        <div style="overflow: hidden;">
+                            <div class="uni-sug-title">${m.name}</div>
+                            <div class="uni-sug-sub">${m.origin_name || ""} (${m.year || ""})</div>
+                        </div>
+                    </div>
+                `).join("");
+
+                drop.style.display = "block";
+                updatePos(target);
+
+                drop.querySelectorAll(".uni-sug-item").forEach(item => {
+                    item.addEventListener("click", function() {
+                        let slug = this.getAttribute("data-slug");
+                        drop.style.display = "none";
+                        target.value = this.querySelector(".uni-sug-title").innerText;
+                        
+                        // Kích hoạt phát phim hoặc chuyển hash
+                        if (typeof renderMovieDetail === "function") renderMovieDetail(slug);
+                        else if (typeof loadMovieDetail === "function") loadMovieDetail(slug);
+                        else if (typeof openMovie === "function") openMovie(slug);
+                        else {
+                            window.location.hash = "#" + slug;
+                            location.reload();
+                        }
+                    });
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }, 200);
+    });
+
+    // Tự động ẩn khi cuộn trang hoặc chạm ra ngoài
+    window.addEventListener("scroll", () => { drop.style.display = "none"; });
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest("#universal-search-dropdown") && !e.target.matches("input")) {
+            drop.style.display = "none";
+        }
+    });
+})();
+</script>
+<!-- /* END_AUTO_SEARCH_SUGGESTION */ -->
+
 </body>
 </html>
