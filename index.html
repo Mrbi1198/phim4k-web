@@ -298,41 +298,43 @@
     }
   </script>
 
+
+
+
+
+
+
+<!-- /* FIX_ALL_SEARCH_PERMANENT */ -->
 <style>
-.search-box-wrapper { position: relative !important; }
-#search-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
+.search-suggest-panel {
+    position: fixed;
     background: #18181b;
     border: 1px solid #3f3f46;
     border-radius: 8px;
-    margin-top: 6px;
-    max-height: 360px;
+    max-height: 400px;
     overflow-y: auto;
-    z-index: 99999;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+    z-index: 9999999;
+    box-shadow: 0 16px 36px rgba(0,0,0,0.9);
     display: none;
 }
-.sug-item {
+.sug-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     padding: 8px 12px;
     border-bottom: 1px solid #27272a;
     cursor: pointer;
-    text-align: left;
 }
-.sug-item:hover, .sug-item:active { background: #27272a; }
-.sug-thumb {
-    width: 38px;
-    height: 50px;
+.sug-row:hover, .sug-row:active { background: #27272a; }
+.sug-img {
+    width: 40px;
+    height: 54px;
     object-fit: cover;
     border-radius: 4px;
+    background: #09090b;
     flex-shrink: 0;
 }
-.sug-name {
+.sug-txt-main {
     font-size: 13px;
     font-weight: 600;
     color: #f4f4f5;
@@ -340,202 +342,85 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.sug-year { font-size: 11px; color: #a1a1aa; margin-top: 2px; }
+.sug-txt-sub {
+    font-size: 11px;
+    color: #a1a1aa;
+    margin-top: 2px;
+}
 </style>
 
 <script>
-(function() {
-    let input = document.querySelector("input[placeholder*="Tìm"], input[placeholder*="tim"], input[type="text"], input[type="search"]");
-    if (!input) return;
+window.addEventListener("DOMContentLoaded", () => {
+    // 1. Tạo hộp gợi ý
+    let box = document.createElement("div");
+    box.className = "search-suggest-panel";
+    document.body.appendChild(box);
 
-    let parent = input.parentElement;
-    parent.classList.add("search-box-wrapper");
+    let searchTimer = null;
 
-    let drop = document.createElement("div");
-    drop.id = "search-suggestions";
-    parent.appendChild(drop);
+    function relocate(input) {
+        let r = input.getBoundingClientRect();
+        box.style.top = (r.bottom + 6) + "px";
+        box.style.left = r.left + "px";
+        box.style.width = r.width + "px";
+    }
 
-    let timer = null;
+    // 2. Bắt tất cả sự kiện nhập vào ô tìm kiếm
+    document.addEventListener("input", (e) => {
+        let inp = e.target;
+        if (!inp.matches("input[type="text"], input[type="search"], .search-input, input")) return;
+        
+        let kw = inp.value.trim();
+        clearTimeout(searchTimer);
 
-    input.addEventListener("input", function(e) {
-        clearTimeout(timer);
-        let q = e.target.value.trim();
-        if (q.length < 2) {
-            drop.style.display = "none";
+        if (kw.length < 2) {
+            box.style.display = "none";
             return;
         }
 
-        timer = setTimeout(async () => {
+        relocate(inp);
+
+        searchTimer = setTimeout(async () => {
             try {
-                let res = await fetch("https://phimapi.com/v1/api/tim-kiem?keyword=" + encodeURIComponent(q) + "&limit=8");
+                let res = await fetch("https://phimapi.com/v1/api/tim-kiem?keyword=" + encodeURIComponent(kw) + "&limit=10");
                 let json = await res.json();
-                let items = json?.data?.items || [];
+                let items = json?.data?.items || json?.items || [];
+                let cdn = json?.data?.APP_DOMAIN_CDN_IMAGE || "https://phimimg.com";
 
                 if (items.length === 0) {
-                    drop.innerHTML = `<div style="padding: 12px; color: #71717a; text-align: center; font-size: 12px;">Không có gợi ý phù hợp</div>`;
-                    drop.style.display = "block";
+                    box.innerHTML = `<div style="padding:14px; text-align:center; color:#71717a; font-size:12px;">Không tìm thấy phim phù hợp</div>`;
+                    box.style.display = "block";
                     return;
                 }
 
-                drop.innerHTML = items.map(m => {
-                    let thumb = "https://phimimg.com/" + m.poster_url;
+                box.innerHTML = items.map(m => {
+                    let poster = m.poster_url.startsWith("http") ? m.poster_url : `${cdn}/${m.poster_url}`;
                     return `
-                        <div class="sug-item" data-slug="${m.slug}">
-                            <img class="sug-thumb" src="${thumb}" referrerpolicy="no-referrer">
-                            <div style="overflow: hidden;">
-                                <div class="sug-name">${m.name}</div>
-                                <div class="sug-year">${m.origin_name || ""} (${m.year || ""})</div>
+                        <div class="sug-row" data-slug="${m.slug}">
+                            <img class="sug-img" src="${poster}" referrerpolicy="no-referrer">
+                            <div style="overflow:hidden;">
+                                <div class="sug-txt-main">${m.name}</div>
+                                <div class="sug-txt-sub">${m.origin_name || ""} (${m.year || "2026"})</div>
                             </div>
                         </div>
                     `;
                 }).join("");
-                drop.style.display = "block";
 
-                drop.querySelectorAll(".sug-item").forEach(el => {
-                    el.addEventListener("click", function() {
-                        let slug = this.getAttribute("data-slug");
-                        drop.style.display = "none";
-                        input.value = this.querySelector(".sug-name").innerText;
-                        if (typeof renderMovieDetail === "function") {
-                            renderMovieDetail(slug);
-                        } else if (typeof loadMovieDetail === "function") {
-                            loadMovieDetail(slug);
-                        } else {
-                            window.location.hash = "#" + slug;
-                            location.reload();
-                        }
-                    });
-                });
-            } catch (err) {
-                console.error(err);
-            }
-        }, 250);
-    });
+                box.style.display = "block";
+                relocate(inp);
 
-    document.addEventListener("click", function(e) {
-        if (!parent.contains(e.target)) drop.style.display = "none";
-    });
-})();
-</script>
-
-
-<!-- /* AUTO_SEARCH_SUGGESTION */ -->
-<style>
-#universal-search-dropdown {
-    position: fixed !important;
-    background: #18181b !important;
-    border: 1px solid #3f3f46 !important;
-    border-radius: 8px !important;
-    max-height: 380px !important;
-    overflow-y: auto !important;
-    z-index: 9999999 !important;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.85) !important;
-    display: none;
-}
-.uni-sug-item {
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    padding: 8px 12px !important;
-    border-bottom: 1px solid #27272a !important;
-    cursor: pointer !important;
-    text-align: left !important;
-}
-.uni-sug-item:hover, .uni-sug-item:active {
-    background: #27272a !important;
-}
-.uni-sug-thumb {
-    width: 40px !important;
-    height: 52px !important;
-    object-fit: cover !important;
-    border-radius: 4px !important;
-    flex-shrink: 0 !important;
-}
-.uni-sug-title {
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: #f4f4f5 !important;
-    white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-}
-.uni-sug-sub {
-    font-size: 11px !important;
-    color: #a1a1aa !important;
-    margin-top: 2px !important;
-}
-</style>
-
-<script>
-(function() {
-    let drop = document.createElement("div");
-    drop.id = "universal-search-dropdown";
-    document.body.appendChild(drop);
-
-    let timer = null;
-
-    function updatePos(inputEl) {
-        let rect = inputEl.getBoundingClientRect();
-        drop.style.top = (rect.bottom + 6) + "px";
-        drop.style.left = rect.left + "px";
-        drop.style.width = rect.width + "px";
-    }
-
-    // Bắt sự kiện gõ trên toàn bộ trang bất kể ô tìm kiếm xuất hiện lúc nào
-    document.addEventListener("input", function(e) {
-        let target = e.target;
-        if (!target.matches("input") && target.getAttribute("type") !== "search" && target.getAttribute("type") !== "text") return;
-
-        let q = target.value.trim();
-        clearTimeout(timer);
-
-        if (q.length < 2) {
-            drop.style.display = "none";
-            return;
-        }
-
-        updatePos(target);
-
-        timer = setTimeout(async () => {
-            try {
-                let res = await fetch("https://phimapi.com/v1/api/tim-kiem?keyword=" + encodeURIComponent(q) + "&limit=8");
-                let data = await res.json();
-                let items = data?.data?.items || [];
-
-                if (items.length === 0) {
-                    drop.innerHTML = `<div style="padding: 12px; color: #71717a; text-align: center; font-size: 12px;">Không có phim phù hợp</div>`;
-                    drop.style.display = "block";
-                    return;
-                }
-
-                drop.innerHTML = items.map(m => `
-                    <div class="uni-sug-item" data-slug="${m.slug}">
-                        <img class="uni-sug-thumb" src="https://phimimg.com/${m.poster_url}" referrerpolicy="no-referrer">
-                        <div style="overflow: hidden;">
-                            <div class="uni-sug-title">${m.name}</div>
-                            <div class="uni-sug-sub">${m.origin_name || ""} (${m.year || ""})</div>
-                        </div>
-                    </div>
-                `).join("");
-
-                drop.style.display = "block";
-                updatePos(target);
-
-                drop.querySelectorAll(".uni-sug-item").forEach(item => {
-                    item.addEventListener("click", function() {
-                        let slug = this.getAttribute("data-slug");
-                        drop.style.display = "none";
-                        target.value = this.querySelector(".uni-sug-title").innerText;
+                box.querySelectorAll(".sug-row").forEach(el => {
+                    el.onclick = () => {
+                        let slug = el.getAttribute("data-slug");
+                        box.style.display = "none";
+                        inp.value = el.querySelector(".sug-txt-main").innerText;
                         
-                        // Kích hoạt phát phim hoặc chuyển hash
-                        if (typeof renderMovieDetail === "function") renderMovieDetail(slug);
+                        // Chuyển hướng xem phim
+                        if (typeof showMovieDetail === "function") showMovieDetail(slug);
+                        else if (typeof renderMovieDetail === "function") renderMovieDetail(slug);
                         else if (typeof loadMovieDetail === "function") loadMovieDetail(slug);
-                        else if (typeof openMovie === "function") openMovie(slug);
-                        else {
-                            window.location.hash = "#" + slug;
-                            location.reload();
-                        }
-                    });
+                        else window.location.href = window.location.pathname + "#" + slug;
+                    };
                 });
             } catch (err) {
                 console.error(err);
@@ -543,16 +428,22 @@
         }, 200);
     });
 
-    // Tự động ẩn khi cuộn trang hoặc chạm ra ngoài
-    window.addEventListener("scroll", () => { drop.style.display = "none"; });
-    document.addEventListener("click", (e) => {
-        if (!e.target.closest("#universal-search-dropdown") && !e.target.matches("input")) {
-            drop.style.display = "none";
+    // 3. Xử lý khi nhấn nút Search/Enter để không bị trắng màn hình
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.matches("input")) {
+            box.style.display = "none";
         }
     });
-})();
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest(".search-suggest-panel") && !e.target.matches("input")) {
+            box.style.display = "none";
+        }
+    });
+    window.addEventListener("scroll", () => { box.style.display = "none"; });
+});
 </script>
-<!-- /* END_AUTO_SEARCH_SUGGESTION */ -->
+<!-- /* END_FIX_ALL_SEARCH */ -->
 
 </body>
 </html>
