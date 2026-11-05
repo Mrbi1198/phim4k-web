@@ -153,7 +153,7 @@
           const fetchUrl=s.isRaw?('https://phimapi.com/'+s.path+'?page=1'):('https://phimapi.com/v1/api/'+s.path+'?page=1&limit=10');
           const r=await fetch(fetchUrl);
           const d=await r.json();
-          const items=d?.data?.items||d?.items||[];
+          const items=(d?.data?.items)||(d?.items)||(d?.data?.data?.items)||[];
           const box=document.getElementById(s.id);
           if(!box||!items.length)return;
           if(s.top){
@@ -191,7 +191,7 @@
       try{
         const r=await fetch(url);
         const d=await r.json();
-        const items=d?.data?.items||d?.items||[];
+        const items=(d?.data?.items)||(d?.items)||(d?.data?.data?.items)||[];
         const grid=document.getElementById('listGrid');
         if(!items.length){
           btn.innerHTML='<span>Đã hết phim</span>';
@@ -304,146 +304,142 @@
 
 
 
-<!-- /* FIX_ALL_SEARCH_PERMANENT */ -->
+
+<!-- /* REALTIME_AUTOCOMPLETE_OPENM */ -->
 <style>
-.search-suggest-panel {
-    position: fixed;
-    background: #18181b;
-    border: 1px solid #3f3f46;
-    border-radius: 8px;
-    max-height: 400px;
-    overflow-y: auto;
-    z-index: 9999999;
-    box-shadow: 0 16px 36px rgba(0,0,0,0.9);
+.search-suggest-box {
+    position: fixed !important;
+    background: #141416 !important;
+    border: 1px solid #3f3f46 !important;
+    border-radius: 8px !important;
+    max-height: 380px !important;
+    overflow-y: auto !important;
+    z-index: 99999999 !important;
+    box-shadow: 0 14px 35px rgba(0,0,0,0.95) !important;
     display: none;
 }
-.sug-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 12px;
-    border-bottom: 1px solid #27272a;
-    cursor: pointer;
+.sug-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #27272a !important;
+    cursor: pointer !important;
+    text-align: left !important;
 }
-.sug-row:hover, .sug-row:active { background: #27272a; }
-.sug-img {
-    width: 40px;
-    height: 54px;
-    object-fit: cover;
-    border-radius: 4px;
-    background: #09090b;
-    flex-shrink: 0;
+.sug-card:active, .sug-card:hover {
+    background: #27272a !important;
 }
-.sug-txt-main {
-    font-size: 13px;
-    font-weight: 600;
-    color: #f4f4f5;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.sug-thumb {
+    width: 38px !important;
+    height: 52px !important;
+    object-fit: cover !important;
+    border-radius: 4px !important;
+    background: #000 !important;
+    flex-shrink: 0 !important;
 }
-.sug-txt-sub {
-    font-size: 11px;
-    color: #a1a1aa;
-    margin-top: 2px;
+.sug-name {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #f4f4f5 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+.sug-sub {
+    font-size: 11px !important;
+    color: #a1a1aa !important;
+    margin-top: 2px !important;
 }
 </style>
 
 <script>
-window.addEventListener("DOMContentLoaded", () => {
-    // 1. Tạo hộp gợi ý
+(function() {
     let box = document.createElement("div");
-    box.className = "search-suggest-panel";
+    box.className = "search-suggest-box";
     document.body.appendChild(box);
 
-    let searchTimer = null;
+    let timer = null;
 
-    function relocate(input) {
-        let r = input.getBoundingClientRect();
+    function pos(el) {
+        let r = el.getBoundingClientRect();
         box.style.top = (r.bottom + 6) + "px";
         box.style.left = r.left + "px";
         box.style.width = r.width + "px";
     }
 
-    // 2. Bắt tất cả sự kiện nhập vào ô tìm kiếm
-    document.addEventListener("input", (e) => {
+    document.addEventListener("input", function(e) {
         let inp = e.target;
-        if (!inp.matches("input[type="text"], input[type="search"], .search-input, input")) return;
-        
-        let kw = inp.value.trim();
-        clearTimeout(searchTimer);
+        if (!inp || inp.tagName !== "INPUT") return;
 
-        if (kw.length < 2) {
+        let q = inp.value.trim();
+        clearTimeout(timer);
+
+        if (q.length < 2) {
             box.style.display = "none";
             return;
         }
 
-        relocate(inp);
+        pos(inp);
 
-        searchTimer = setTimeout(async () => {
+        timer = setTimeout(async () => {
             try {
-                let res = await fetch("https://phimapi.com/v1/api/tim-kiem?keyword=" + encodeURIComponent(kw) + "&limit=10");
-                let json = await res.json();
-                let items = json?.data?.items || json?.items || [];
-                let cdn = json?.data?.APP_DOMAIN_CDN_IMAGE || "https://phimimg.com";
+                let res = await fetch("https://phimapi.com/v1/api/tim-kiem?keyword=" + encodeURIComponent(q) + "&limit=10");
+                let d = await res.json();
+                let items = (d?.data?.items) || (d?.items) || [];
+                let cdn = d?.data?.APP_DOMAIN_CDN_IMAGE || "https://phimimg.com";
 
-                if (items.length === 0) {
-                    box.innerHTML = `<div style="padding:14px; text-align:center; color:#71717a; font-size:12px;">Không tìm thấy phim phù hợp</div>`;
+                if (!items || items.length === 0) {
+                    box.innerHTML = `<div style="padding:12px;color:#71717a;text-align:center;font-size:12px;">Không tìm thấy kết quả phù hợp</div>`;
                     box.style.display = "block";
                     return;
                 }
 
                 box.innerHTML = items.map(m => {
-                    let poster = m.poster_url.startsWith("http") ? m.poster_url : `${cdn}/${m.poster_url}`;
+                    let img = m.poster_url.startsWith("http") ? m.poster_url : (cdn + "/" + m.poster_url);
                     return `
-                        <div class="sug-row" data-slug="${m.slug}">
-                            <img class="sug-img" src="${poster}" referrerpolicy="no-referrer">
+                        <div class="sug-card" data-slug="${m.slug}">
+                            <img class="sug-thumb" src="${img}" referrerpolicy="no-referrer">
                             <div style="overflow:hidden;">
-                                <div class="sug-txt-main">${m.name}</div>
-                                <div class="sug-txt-sub">${m.origin_name || ""} (${m.year || "2026"})</div>
+                                <div class="sug-name">${m.name}</div>
+                                <div class="sug-sub">${m.origin_name || ""} (${m.year || "2026"})</div>
                             </div>
                         </div>
                     `;
                 }).join("");
 
                 box.style.display = "block";
-                relocate(inp);
+                pos(inp);
 
-                box.querySelectorAll(".sug-row").forEach(el => {
-                    el.onclick = () => {
-                        let slug = el.getAttribute("data-slug");
+                box.querySelectorAll(".sug-card").forEach(c => {
+                    c.onclick = function() {
+                        let slug = this.getAttribute("data-slug");
                         box.style.display = "none";
-                        inp.value = el.querySelector(".sug-txt-main").innerText;
+                        inp.value = this.querySelector(".sug-name").innerText;
                         
-                        // Chuyển hướng xem phim
-                        if (typeof showMovieDetail === "function") showMovieDetail(slug);
-                        else if (typeof renderMovieDetail === "function") renderMovieDetail(slug);
-                        else if (typeof loadMovieDetail === "function") loadMovieDetail(slug);
-                        else window.location.href = window.location.pathname + "#" + slug;
+                        // Kích hoạt đúng hàm mở phim chuẩn của web
+                        if (typeof openM === "function") {
+                            openM(slug);
+                        } else {
+                            window.location.hash = slug;
+                            location.reload();
+                        }
                     };
                 });
             } catch (err) {
-                console.error(err);
+                console.error("Lỗi dropdown:", err);
             }
         }, 200);
     });
 
-    // 3. Xử lý khi nhấn nút Search/Enter để không bị trắng màn hình
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "Enter" && e.target.matches("input")) {
+    document.addEventListener("click", function(e) {
+        if (!e.target.closest(".search-suggest-box") && !e.target.matches("input")) {
             box.style.display = "none";
         }
     });
 
-    document.addEventListener("click", (e) => {
-        if (!e.target.closest(".search-suggest-panel") && !e.target.matches("input")) {
-            box.style.display = "none";
-        }
-    });
     window.addEventListener("scroll", () => { box.style.display = "none"; });
-});
+})();
 </script>
-<!-- /* END_FIX_ALL_SEARCH */ -->
-
 </body>
 </html>
