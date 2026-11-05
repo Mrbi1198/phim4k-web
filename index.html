@@ -190,7 +190,7 @@
       suggestDropdown.style.display = 'none';
       currentMode = 'search';
       currentQuery = q;
-      currentPage = 1; // LUÔN RESET VỀ TRANG 1
+      currentPage = 1;
       heroSection.style.display = 'none';
       sectionTitle.innerText = `KẾT QUẢ: ${q.toUpperCase()}`;
       movieGrid.innerHTML = '';
@@ -215,30 +215,37 @@
       try {
         const res = await fetch(url);
         const data = await res.json();
-        
-        let items = data?.items || data?.data?.items || [];
+
+        // Bóc tách items chuẩn từ mọi dạng response của phimapi
+        let items = [];
+        if (data?.data?.items && Array.isArray(data.data.items)) {
+          items = data.data.items;
+        } else if (data?.items && Array.isArray(data.items)) {
+          items = data.items;
+        }
+
         const cdn = data?.data?.APP_DOMAIN_CDN_IMAGE || "https://phimimg.com";
 
         if (items.length === 0) {
           if (isReset) {
-            movieGrid.innerHTML = `<div class="col-span-full py-12 text-center text-neutral-500 text-xs">Không tìm thấy phim nào</div>`;
+            movieGrid.innerHTML = `<div class="col-span-full py-16 text-center text-neutral-400 text-sm">Không tìm thấy phim phù hợp với từ khóa "${currentQuery}"</div>`;
           }
           loadMoreBtn.innerHTML = '<span>Đã hết phim</span>';
           isFetching = false;
           return;
         }
 
-        // Cập nhật hero banner nếu ở trang chủ lần đầu
         if (currentMode === 'home' && currentPage === 1 && items.length > 0) {
           const hero = items[0];
-          document.getElementById("heroImg").src = hero.thumb_url || `${cdn}/${hero.poster_url}`;
+          document.getElementById("heroImg").src = hero.thumb_url || (hero.poster_url?.startsWith('http') ? hero.poster_url : `${cdn}/${hero.poster_url}`);
           document.getElementById("heroTitle").innerText = hero.name;
           document.getElementById("heroSub").innerText = `${hero.origin_name || ""} • ${hero.year || "2026"}`;
           document.getElementById("heroBtn").onclick = () => openMovie(hero.slug);
         }
 
         const cards = items.map(m => {
-          const poster = m.poster_url.startsWith("http") ? m.poster_url : `${cdn}/${m.poster_url}`;
+          let rawPoster = m.poster_url || m.thumb_url || "";
+          let poster = rawPoster.startsWith("http") ? rawPoster : `${cdn}/${rawPoster}`;
           return `
             <div onclick="openMovie('${m.slug}')" class="cursor-pointer group">
               <div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-neutral-900 border border-neutral-800">
@@ -254,12 +261,17 @@
           `;
         }).join("");
 
-        movieGrid.insertAdjacentHTML("beforeend", cards);
+        if (isReset) {
+          movieGrid.innerHTML = cards;
+        } else {
+          movieGrid.insertAdjacentHTML("beforeend", cards);
+        }
+
         pageBadge.innerText = `Trang ${currentPage}`;
         loadMoreBtn.innerHTML = '<span>Tải thêm phim</span>';
       } catch (err) {
         console.error("Lỗi:", err);
-        loadMoreBtn.innerHTML = '<span>Lỗi tải dữ liệu, thử lại</span>';
+        loadMoreBtn.innerHTML = '<span>Lỗi tải dữ liệu, vui lòng thử lại</span>';
       }
       isFetching = false;
     }
