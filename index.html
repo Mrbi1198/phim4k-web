@@ -207,10 +207,10 @@
       if (currentMode === 'home') {
         url = `https://phimapi.com/danh-sach/phim-moi-cap-nhat?page=${currentPage}`;
       } else if (currentMode === 'category') {
-        url = `https://phimapi.com/v1/api/danh-sach/${currentQuery}?page=${currentPage}&limit=24`;
+        url = `https://phimapi.com/v1/api/danh-sach/${currentQuery}?page=${currentPage}&limit=24&_t=1793867387`;
       } else if (currentMode === 'search') {
         // API tim kiem cua phimapi chi nhan keyword va limit
-        url = `https://phimapi.com/v1/api/tim-kiem?keyword=${encodeURIComponent(currentQuery)}&limit=24`;
+        url = `https://phimapi.com/v1/api/tim-kiem?keyword=${encodeURIComponent(currentQuery)}&limit=24&_t=1793867387`;
       }
 
       try {
@@ -225,7 +225,7 @@
           if (isReset) {
             movieGrid.innerHTML = `<div class="col-span-full py-16 text-center text-neutral-400 text-sm">Không tìm thấy phim phù hợp với từ khóa "${currentQuery}"</div>`;
           }
-          loadMoreBtn.innerHTML = '<span>Đã hết phim</span>';
+          loadMoreBtn.innerHTML = '<span class="text-red-400">Không tìm thấy kết quả hoặc lỗi kết nối API</span>';
           isFetching = false;
           return;
         }
