@@ -53,7 +53,31 @@
 
     <!-- Thanh tìm kiếm & Hộp gợi ý -->
     <div id="searchWrap" class="mt-3 relative">
-      <div class="relative flex items-center">
+      
+    <!-- GENRE_NAV_START -->
+    <div class="relative inline-block text-left" id="genreContainer">
+        <button id="genreBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 transition">
+            <span>Thể loại</span>
+            <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+        <div id="genreDropdown" class="hidden absolute left-0 mt-2 w-64 max-h-80 overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl z-50 p-3 grid grid-cols-2 gap-1.5">
+    <button type="button" onclick="selectGenre('hanh-dong', 'Hành Động')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Hành Động</button>
+<button type="button" onclick="selectGenre('vien-tuong', 'Viễn Tưởng')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Viễn Tưởng</button>
+<button type="button" onclick="selectGenre('kinh-di', 'Kinh Dị')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Kinh Dị</button>
+<button type="button" onclick="selectGenre('tinh-cam', 'Tình Cảm')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Tình Cảm</button>
+<button type="button" onclick="selectGenre('hai-huoc', 'Hài Hước')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Hài Hước</button>
+<button type="button" onclick="selectGenre('phieu-luu', 'Phiêu Lưu')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Phiêu Lưu</button>
+<button type="button" onclick="selectGenre('hoat-hinh', 'Hoạt Hình')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Hoạt Hình</button>
+<button type="button" onclick="selectGenre('vo-thuat', 'Võ Thuật')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Võ Thuật</button>
+<button type="button" onclick="selectGenre('co-trang', 'Cổ Trang')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Cổ Trang</button>
+<button type="button" onclick="selectGenre('tam-ly', 'Tâm Lý')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Tâm Lý</button>
+<button type="button" onclick="selectGenre('hinh-su', 'Hình Sự')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Hình Sự</button>
+<button type="button" onclick="selectGenre('chien-tranh', 'Chiến Tranh')" class="text-left px-2.5 py-1.5 rounded-md text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 transition truncate">Chiến Tranh</button>
+
+        </div>
+    </div>
+    <!-- GENRE_NAV_END -->
+    <div class="relative flex items-center">
         <input id="searchInput" type="text" placeholder="Tìm kiếm phim, diễn viên..."
           class="w-full bg-neutral-900 border border-neutral-700 rounded-lg py-2 pl-3 pr-10 text-sm text-white focus:outline-none focus:border-yellow-400"
           onkeydown="if(event.key==='Enter') doSearch()">
@@ -435,6 +459,71 @@
 })();
 </script>
 <!-- FIX_BACK_GESTURE_END -->
+
+
+<!-- GENRE_SCRIPT_START -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const genreBtn = document.getElementById("genreBtn");
+    const genreDropdown = document.getElementById("genreDropdown");
+
+    if (genreBtn && genreDropdown) {
+        genreBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            genreDropdown.classList.toggle("hidden");
+        });
+
+        document.addEventListener("click", (e) => {
+            if (!genreDropdown.contains(e.target) && !genreBtn.contains(e.target)) {
+                genreDropdown.classList.add("hidden");
+            }
+        });
+    }
+});
+
+async function selectGenre(slug, name) {
+    const genreDropdown = document.getElementById("genreDropdown");
+    if (genreDropdown) genreDropdown.classList.add("hidden");
+    
+    const searchInput = document.getElementById("searchInput");
+    if (searchInput) searchInput.value = "";
+    
+    const titleEl = document.querySelector("h2") || document.querySelector("h1");
+    if (titleEl) titleEl.innerText = "Thể loại: " + name;
+
+    const listContainer = document.getElementById("movieList") || document.getElementById("moviesGrid") || document.querySelector(".grid");
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = `<div class="col-span-full py-16 text-center text-neutral-400 text-sm">Đang tải thể loại ${name}...</div>`;
+
+    try {
+        // Thử gọi endpoint thể loại chuẩn của phimapi
+        let res = await fetch(`https://phimapi.com/v1/api/the-loai/${slug}?page=1&limit=24`);
+        let data = await res.json();
+        let items = data?.data?.items || data?.items || [];
+        
+        // Nếu không có kết quả từ endpoint the-loai, fallback sang search
+        if (!items || items.length === 0) {
+            res = await fetch(`https://phimapi.com/v1/api/tim-kiem?keyword=${encodeURIComponent(name)}&limit=24`);
+            data = await res.json();
+            items = data?.data?.items || data?.items || [];
+        }
+
+        if (items && items.length > 0) {
+            if (typeof renderMovies === "function") {
+                renderMovies(items);
+            } else if (typeof displayMovies === "function") {
+                displayMovies(items);
+            }
+        } else {
+            listContainer.innerHTML = `<div class="col-span-full py-16 text-center text-neutral-400 text-sm">Không tìm thấy phim phù hợp với thể loại này.</div>`;
+        }
+    } catch (e) {
+        listContainer.innerHTML = `<div class="col-span-full py-16 text-center text-red-400 text-sm">Lỗi tải dữ liệu: ${e.message}</div>`;
+    }
+}
+</script>
+<!-- GENRE_SCRIPT_END -->
 
 </body>
 </html>
