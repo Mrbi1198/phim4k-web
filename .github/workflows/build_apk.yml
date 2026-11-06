@@ -25,7 +25,9 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
+          mkdir -p public
           npx cap add android
+          mkdir -p android/app/src/main/assets
 
       - name: Sync Capacitor
         run: |
