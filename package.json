@@ -1,0 +1,13 @@
+{
+  "name": "phim4k-app",
+  "version": "1.0.0",
+  "description": "Ung dung xem phim 4K",
+  "scripts": {},
+  "dependencies": {
+    "@capacitor/core": "^6.0.0",
+    "@capacitor/android": "^6.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.0.0"
+  }
+}

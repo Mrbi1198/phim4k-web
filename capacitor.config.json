@@ -1,0 +1,12 @@
+{
+  "appId": "com.phim4k.app",
+  "appName": "Phim 4K",
+  "webDir": "public",
+  "server": {
+    "url": "https://phim4k-web.onrender.com",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
