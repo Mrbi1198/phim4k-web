@@ -381,6 +381,61 @@
       searchInput.focus();
     }
   </script>
+
+<!-- FIX_BACK_GESTURE_START -->
+<script>
+(function() {
+    let isWatching = false;
+
+    // 1. Hook vào hàm mở phim để đẩy trạng thái vào lịch sử duyệt web
+    const hookOpen = () => {
+        if (typeof window.openMovie === 'function' && !window.openMovie._hooked) {
+            const _orig = window.openMovie;
+            window.openMovie = function() {
+                isWatching = true;
+                if (!location.hash.includes('xem-phim')) {
+                    history.pushState({ page: 'movie' }, '', '#xem-phim');
+                }
+                return _orig.apply(this, arguments);
+            };
+            window.openMovie._hooked = true;
+        }
+    };
+    hookOpen();
+    window.addEventListener('DOMContentLoaded', hookOpen);
+
+    // 2. Bắt sự kiện khi vuốt mép màn hình / phím Back trên Android
+    window.addEventListener('popstate', function(e) {
+        if (isWatching) {
+            isWatching = false;
+            // Tự động kích hoạt nút Quay lại trên giao diện
+            const backBtn = Array.from(document.querySelectorAll('button, div, span, a')).find(
+                el => el.textContent.trim().includes('Quay lại') && el.offsetParent !== null
+            );
+            if (backBtn) {
+                backBtn.click();
+            } else if (typeof closeMovie === 'function') {
+                closeMovie();
+            } else if (typeof backToHome === 'function') {
+                backToHome();
+            }
+        }
+    });
+
+    // 3. Đồng bộ khi người dùng bấm trực tiếp nút Quay lại trên màn hình
+    document.addEventListener('click', function(e) {
+        const target = e.target.closest('button, div, a, span');
+        if (target && target.textContent.trim().includes('Quay lại') && isWatching) {
+            isWatching = false;
+            if (location.hash.includes('xem-phim')) {
+                history.back();
+            }
+        }
+    }, true);
+})();
+</script>
+<!-- FIX_BACK_GESTURE_END -->
+
 </body>
 </html>
 <!-- autodeploy-test-phim -->
