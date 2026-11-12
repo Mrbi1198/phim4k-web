@@ -67,30 +67,31 @@
     </div>
   
 
-<!-- GENRE_NAV_START -->
-    <div class="relative inline-block text-left my-2" id="genreContainer" style="z-index: 60;">
-        <button id="genreBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 transition shadow-sm">
-            <span>Thể loại</span>
-            <svg class="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-        </button>
-        <div id="genreDropdown" class="hidden absolute left-0 mt-2 w-64 max-h-80 overflow-y-auto bg-neutral-900/95 backdrop-blur-md border border-neutral-800 rounded-xl shadow-2xl p-2 grid grid-cols-2 gap-1">
-            <button type="button" onclick="openGenrePage('hanh-dong', 'Hành Động', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hành Động</button>
-<button type="button" onclick="openGenrePage('vien-tuong', 'Viễn Tưởng', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Viễn Tưởng</button>
-<button type="button" onclick="openGenrePage('kinh-di', 'Kinh Dị', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Kinh Dị</button>
-<button type="button" onclick="openGenrePage('tinh-cam', 'Tình Cảm', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Tình Cảm</button>
-<button type="button" onclick="openGenrePage('hai-huoc', 'Hài Hước', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hài Hước</button>
-<button type="button" onclick="openGenrePage('phieu-luu', 'Phiêu Lưu', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Phiêu Lưu</button>
-<button type="button" onclick="openGenrePage('hoat-hinh', 'Hoạt Hình', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hoạt Hình</button>
-<button type="button" onclick="openGenrePage('vo-thuat', 'Võ Thuật', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Võ Thuật</button>
-<button type="button" onclick="openGenrePage('co-trang', 'Cổ Trang', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Cổ Trang</button>
-<button type="button" onclick="openGenrePage('tam-ly', 'Tâm Lý', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Tâm Lý</button>
-<button type="button" onclick="openGenrePage('hinh-su', 'Hình Sự', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hình Sự</button>
-<button type="button" onclick="openGenrePage('chien-tranh', 'Chiến Tranh', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Chiến Tranh</button>
 
+<!-- GENRE_NAV_START -->
+    <div class="flex flex-wrap items-center gap-2 my-2 relative" id="filterBarContainer" style="z-index: 60;">
+        <div class="relative inline-block text-left">
+            <button type="button" onclick="toggleFilterMenu('genreDropdown')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700"><span>Thể loại</span><span>▾</span></button>
+            <div id="genreDropdown" class="filter-dropdown hidden absolute left-0 mt-2 w-64 max-h-80 overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl p-2 grid grid-cols-2 gap-1"><button type="button" onclick="openCatalogPage('the-loai', 'hanh-dong', 'Thể loại: Hành Động', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hành Động</button><button type="button" onclick="openCatalogPage('the-loai', 'vien-tuong', 'Thể loại: Viễn Tưởng', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Viễn Tưởng</button><button type="button" onclick="openCatalogPage('the-loai', 'kinh-di', 'Thể loại: Kinh Dị', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Kinh Dị</button><button type="button" onclick="openCatalogPage('the-loai', 'tinh-cam', 'Thể loại: Tình Cảm', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Tình Cảm</button><button type="button" onclick="openCatalogPage('the-loai', 'hai-huoc', 'Thể loại: Hài Hước', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hài Hước</button><button type="button" onclick="openCatalogPage('the-loai', 'phieu-luu', 'Thể loại: Phiêu Lưu', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Phiêu Lưu</button><button type="button" onclick="openCatalogPage('the-loai', 'hoat-hinh', 'Thể loại: Hoạt Hình', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hoạt Hình</button><button type="button" onclick="openCatalogPage('the-loai', 'vo-thuat', 'Thể loại: Võ Thuật', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Võ Thuật</button><button type="button" onclick="openCatalogPage('the-loai', 'co-trang', 'Thể loại: Cổ Trang', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Cổ Trang</button><button type="button" onclick="openCatalogPage('the-loai', 'tam-ly', 'Thể loại: Tâm Lý', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Tâm Lý</button><button type="button" onclick="openCatalogPage('the-loai', 'hinh-su', 'Thể loại: Hình Sự', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hình Sự</button><button type="button" onclick="openCatalogPage('the-loai', 'chien-tranh', 'Thể loại: Chiến Tranh', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Chiến Tranh</button></div>
         </div>
-    </div>
-    <!-- GENRE_NAV_END -->
+        <div class="relative inline-block text-left">
+            <button type="button" onclick="toggleFilterMenu('countryDropdown')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700"><span>Quốc gia</span><span>▾</span></button>
+            <div id="countryDropdown" class="filter-dropdown hidden absolute left-0 mt-2 w-60 max-h-80 overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl p-2 grid grid-cols-2 gap-1"><button type="button" onclick="openCatalogPage('quoc-gia', 'viet-nam', 'Quốc gia: Việt Nam', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Việt Nam</button><button type="button" onclick="openCatalogPage('quoc-gia', 'han-quoc', 'Quốc gia: Hàn Quốc', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hàn Quốc</button><button type="button" onclick="openCatalogPage('quoc-gia', 'trung-quoc', 'Quốc gia: Trung Quốc', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Trung Quốc</button><button type="button" onclick="openCatalogPage('quoc-gia', 'nhat-ban', 'Quốc gia: Nhật Bản', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Nhật Bản</button><button type="button" onclick="openCatalogPage('quoc-gia', 'au-my', 'Quốc gia: Âu Mỹ', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Âu Mỹ</button><button type="button" onclick="openCatalogPage('quoc-gia', 'thai-lan', 'Quốc gia: Thái Lan', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Thái Lan</button><button type="button" onclick="openCatalogPage('quoc-gia', 'dai-loan', 'Quốc gia: Đài Loan', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Đài Loan</button><button type="button" onclick="openCatalogPage('quoc-gia', 'hong-kong', 'Quốc gia: Hồng Kông', 1)" class="text-left px-3 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition truncate font-medium">Hồng Kông</button></div>
+        </div>
+        <div class="relative inline-block text-left">
+            <button type="button" onclick="toggleFilterMenu('yearDropdown')" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700"><span>Năm</span><span>▾</span></button>
+            <div id="yearDropdown" class="filter-dropdown hidden absolute right-0 sm:left-0 mt-2 w-56 max-h-72 overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-xl shadow-2xl p-2 grid grid-cols-3 gap-1"><button type="button" onclick="openCatalogPage('nam', '2026', 'Năm: 2026', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2026</button><button type="button" onclick="openCatalogPage('nam', '2025', 'Năm: 2025', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2025</button><button type="button" onclick="openCatalogPage('nam', '2024', 'Năm: 2024', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2024</button><button type="button" onclick="openCatalogPage('nam', '2023', 'Năm: 2023', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2023</button><button type="button" onclick="openCatalogPage('nam', '2022', 'Năm: 2022', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2022</button><button type="button" onclick="openCatalogPage('nam', '2021', 'Năm: 2021', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2021</button><button type="button" onclick="openCatalogPage('nam', '2020', 'Năm: 2020', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2020</button><button type="button" onclick="openCatalogPage('nam', '2019', 'Năm: 2019', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2019</button><button type="button" onclick="openCatalogPage('nam', '2018', 'Năm: 2018', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2018</button><button type="button" onclick="openCatalogPage('nam', '2017', 'Năm: 2017', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2017</button><button type="button" onclick="openCatalogPage('nam', '2016', 'Năm: 2016', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2016</button><button type="button" onclick="openCatalogPage('nam', '2015', 'Năm: 2015', 1)" class="text-center px-2 py-2 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-lg transition font-medium">2015</button></div>
+        </div>
+    </div><!-- GENRE_NAV_END -->
 </header>
+<!-- HISTORY_SECTION_START -->
+    <section id="watchHistorySection" class="hidden px-4 pt-3 pb-2 max-w-7xl mx-auto">
+        <div class="flex items-center justify-between mb-2">
+            <h3 class="text-xs sm:text-sm font-bold text-yellow-400 uppercase tracking-wider">● Đã xem gần đây</h3>
+            <button type="button" onclick="clearWatchHistory()" class="text-[11px] text-neutral-400 hover:text-red-400">Xóa lịch sử</button>
+        </div>
+        <div id="watchHistoryList" class="flex gap-3 overflow-x-auto pb-2"></div>
+    </section><!-- HISTORY_SECTION_END -->
 
   <!-- Banner nổi bật (Chỉ hiện ở Trang chủ) -->
   <div id="heroSection" class="px-4 mt-3">
@@ -123,28 +124,23 @@
       </button>
     </div>
   
+
 <!-- GENRE_PAGE_CONTAINER_START -->
     <section id="genrePageSection" class="hidden min-h-screen px-4 pb-28 max-w-7xl mx-auto">
         <div class="flex items-center justify-between py-4 border-b border-neutral-800 mb-6">
             <div class="flex items-center gap-3">
-                <button type="button" onclick="closeGenrePage()" class="px-3 py-1.5 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 rounded-lg border border-neutral-700 text-xs flex items-center gap-1.5 font-medium transition">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span>Trang chủ</span>
-                </button>
-                <h2 id="genrePageHeading" class="text-base sm:text-lg font-bold text-white tracking-wide">Thể loại</h2>
+                <button type="button" onclick="closeCatalogPage()" class="px-3 py-1.5 bg-neutral-800 text-neutral-200 rounded-lg border border-neutral-700 text-xs font-medium">← Trang chủ</button>
+                <h2 id="genrePageHeading" class="text-base font-bold text-white">Danh mục</h2>
             </div>
-            <span id="genreTotalBadge" class="text-xs bg-neutral-800 text-neutral-400 px-2.5 py-1 rounded-full border border-neutral-700">Trang 1</span>
+            <span id="genreTotalBadge" class="text-xs bg-neutral-800 text-neutral-400 px-2.5 py-1 rounded-full">Trang 1</span>
         </div>
-
         <div id="genreMoviesGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"></div>
-
-        <div class="flex items-center justify-center gap-3 mt-10 py-6 border-t border-neutral-800" id="genrePagination">
-            <button id="genrePrevBtn" onclick="changeGenrePage(-1)" class="px-4 py-2 text-xs font-semibold rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:pointer-events-none text-white border border-neutral-700 transition">← Trang trước</button>
-            <span id="genrePageIndicator" class="text-xs text-neutral-400 font-medium">Trang 1</span>
-            <button id="genreNextBtn" onclick="changeGenrePage(1)" class="px-4 py-2 text-xs font-semibold rounded-lg bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:pointer-events-none text-white border border-neutral-700 transition">Trang sau →</button>
+        <div class="flex items-center justify-center gap-3 mt-10 py-6 border-t border-neutral-800">
+            <button id="genrePrevBtn" onclick="changeCatalogPage(-1)" class="px-4 py-2 text-xs font-semibold rounded-lg bg-neutral-800 disabled:opacity-30 text-white border border-neutral-700">← Trước</button>
+            <span id="genrePageIndicator" class="text-xs text-neutral-400">Trang 1</span>
+            <button id="genreNextBtn" onclick="changeCatalogPage(1)" class="px-4 py-2 text-xs font-semibold rounded-lg bg-neutral-800 disabled:opacity-30 text-white border border-neutral-700">Sau →</button>
         </div>
-    </section>
-    <!-- GENRE_PAGE_CONTAINER_END -->
+    </section><!-- GENRE_PAGE_CONTAINER_END -->
 </main>
 
   <!-- Modal xem phim & chi tiết -->
@@ -491,116 +487,22 @@
 
 
 
-<!-- GENRE_SCRIPT_START -->
-    <script>
-    let currentGenreSlug = "";
-    let currentGenreName = "";
-    let currentGenrePage = 1;
-    let maxGenrePages = 1;
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const btn = document.getElementById("genreBtn");
-        const menu = document.getElementById("genreDropdown");
-        if (btn && menu) {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                menu.classList.toggle("hidden");
-            };
-            document.addEventListener("click", (e) => {
-                if (!menu.contains(e.target) && !btn.contains(e.target)) {
-                    menu.classList.add("hidden");
-                }
-            });
-        }
-    });
-
-    function closeGenrePage() {
-        const genreSec = document.getElementById("genrePageSection");
-        if (genreSec) genreSec.classList.add("hidden");
-        document.querySelectorAll("main > *:not(#genrePageSection), header ~ div:not(#genrePageSection)").forEach(el => {
-            if (el.id !== "genrePageSection" && !el.contains(genreSec)) {
-                el.style.display = "";
-            }
-        });
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    async function openGenrePage(slug, name, page = 1) {
-        currentGenreSlug = slug;
-        currentGenreName = name;
-        currentGenrePage = page;
-
-        const menu = document.getElementById("genreDropdown");
-        if (menu) menu.classList.add("hidden");
-
-        document.querySelectorAll("main > *:not(#genrePageSection), header ~ div:not(#genrePageSection)").forEach(el => {
-            if (el.id !== "genrePageSection" && !el.id.includes("footer") && !el.contains(document.getElementById("genrePageSection"))) {
-                el.style.display = "none";
-            }
-        });
-
-        const genreSec = document.getElementById("genrePageSection");
-        const heading = document.getElementById("genrePageHeading");
-        const grid = document.getElementById("genreMoviesGrid");
-        const indicator = document.getElementById("genrePageIndicator");
-        const badge = document.getElementById("genreTotalBadge");
-        const prevBtn = document.getElementById("genrePrevBtn");
-        const nextBtn = document.getElementById("genreNextBtn");
-
-        if (!genreSec || !grid) return;
-
-        genreSec.classList.remove("hidden");
-        heading.textContent = "Thể loại: " + name;
-        grid.innerHTML = '<div class="col-span-full py-20 text-center text-neutral-400 text-sm animate-pulse">Đang tải thể loại ' + name + ' (Trang ' + page + ')...</div>';
-        window.scrollTo({ top: 0, behavior: "smooth" });
-
-        try {
-            const res = await fetch(`https://phimapi.com/v1/api/the-loai/${slug}?page=${page}&limit=24`);
-            const data = await res.json();
-            const items = data?.data?.items || data?.items || [];
-            const pagination = data?.data?.params?.pagination || {};
-
-            maxGenrePages = pagination.totalPages || Math.ceil((pagination.totalItems || 100) / (pagination.totalItemsPerPage || 24)) || 10;
-
-            indicator.textContent = `Trang ${page} / ${maxGenrePages}`;
-            badge.textContent = `Trang ${page} / ${maxGenrePages}`;
-            prevBtn.disabled = page <= 1;
-            nextBtn.disabled = page >= maxGenrePages;
-
-            if (items.length > 0) {
-                grid.innerHTML = items.map(m => {
-                    const poster = m.poster_url || m.thumb_url || "";
-                    const imgUrl = poster.startsWith("http") ? poster : `https://phimimg.com/${poster}`;
-                    const episodeBadge = m.episode_current ? `<span class="absolute top-1.5 left-1.5 bg-red-600/90 text-white text-[10px] font-bold px-1.5 py-0.5 rounded shadow">${m.episode_current}</span>` : "";
-                    const qualityBadge = m.quality ? `<span class="absolute top-1.5 right-1.5 bg-yellow-500/90 text-black text-[10px] font-extrabold px-1.5 py-0.5 rounded shadow">${m.quality}</span>` : "";
-
-                    return `
-                    <div class="cursor-pointer group flex flex-col" onclick="typeof loadMovieDetail === 'function' ? loadMovieDetail('${m.slug}') : (window.location.hash = '${m.slug}')">
-                        <div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-neutral-800 shadow-md">
-                            <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" loading="lazy" onerror="this.src='https://via.placeholder.com/300x450?text=No+Cover'"/>
-                            ${episodeBadge}
-                            ${qualityBadge}
-                        </div>
-                        <h4 class="mt-2 text-xs font-semibold text-neutral-100 truncate group-hover:text-yellow-400 transition">${m.name}</h4>
-                        <p class="text-[10px] text-neutral-400 truncate">${m.origin_name || ''}</p>
-                    </div>`;
-                }).join("");
-            } else {
-                grid.innerHTML = '<div class="col-span-full py-20 text-center text-neutral-400 text-sm">Chưa có phim trong mục này.</div>';
-            }
-        } catch (err) {
-            grid.innerHTML = `<div class="col-span-full py-20 text-center text-red-400 text-sm">Lỗi tải dữ liệu: ${err.message}</div>`;
-        }
-    }
-
-    function changeGenrePage(offset) {
-        const targetPage = currentGenrePage + offset;
-        if (targetPage >= 1 && targetPage <= maxGenrePages) {
-            openGenrePage(currentGenreSlug, currentGenreName, targetPage);
-        }
-    }
-    </script>
-    <!-- GENRE_SCRIPT_END -->
+<!-- GENRE_SCRIPT_START --><script>
+    const HISTORY_KEY = "phim4k_watch_history";
+    let cType="", cSlug="", cTitle="", cPage=1, maxPages=1;
+    function toggleFilterMenu(id){document.querySelectorAll(".filter-dropdown").forEach(e=>{if(e.id!==id)e.classList.add("hidden")});document.getElementById(id)?.classList.toggle("hidden")}
+    document.addEventListener("click",e=>{if(!document.getElementById("filterBarContainer")?.contains(e.target))document.querySelectorAll(".filter-dropdown").forEach(x=>x.classList.add("hidden"))});
+    function getWatchHistory(){try{return JSON.parse(localStorage.getItem(HISTORY_KEY))||[]}catch{return[]}}
+    function saveToWatchHistory(m){if(!m||!m.slug)return;let l=getWatchHistory().filter(i=>i.slug!==m.slug);l.unshift({slug:m.slug,name:m.name||m.slug,poster:m.poster||"",episode:m.episode||""});if(l.length>20)l=l.slice(0,20);localStorage.setItem(HISTORY_KEY,JSON.stringify(l));renderWatchHistory()}
+    function clearWatchHistory(){localStorage.removeItem(HISTORY_KEY);renderWatchHistory()}
+    function renderWatchHistory(){const s=document.getElementById("watchHistorySection"),c=document.getElementById("watchHistoryList");if(!s||!c)return;const l=getWatchHistory();if(!l.length){s.classList.add("hidden");return}s.classList.remove("hidden");c.innerHTML=l.map(m=>`<div onclick="openMovieWithHistory('${m.slug}','${(m.name||"").replace(/'/g,"\'")}','${m.poster||""}','${m.episode||""}')" class="flex-none w-28 cursor-pointer"><div class="relative aspect-[2/3] rounded-lg overflow-hidden bg-neutral-800"><img src="${m.poster||"https://via.placeholder.com/300x450"}" class="w-full h-full object-cover" loading="lazy"/>${m.episode?`<span class="absolute bottom-1 left-1 bg-black/80 text-yellow-400 text-[9px] px-1 rounded">${m.episode}</span>`:""}</div><h4 class="mt-1 text-[11px] text-neutral-200 truncate">${m.name}</h4></div>`).join("")}
+    function openMovieWithHistory(slug,name,poster,ep){saveToWatchHistory({slug,name,poster,episode:ep});if(typeof loadMovieDetail==="function")loadMovieDetail(slug);else window.location.hash=slug}
+    document.addEventListener("DOMContentLoaded",()=>{renderWatchHistory();if(typeof window.loadMovieDetail==="function"){const orig=window.loadMovieDetail;window.loadMovieDetail=async function(s,...a){const r=await orig.apply(this,[s,...a]);setTimeout(()=>{const t=document.querySelector("#movieTitle,#detailTitle,h1"),i=document.querySelector("#moviePoster,#detailPoster,.detail-poster img");saveToWatchHistory({slug:s,name:t?t.textContent.trim():s,poster:i?i.src:""})},800);return r}}});
+    function closeCatalogPage(){const s=document.getElementById("genrePageSection");if(s)s.classList.add("hidden");document.querySelectorAll("main > *:not(#genrePageSection), header ~ div:not(#genrePageSection)").forEach(e=>{if(e.id!=="genrePageSection"&&!e.contains(s))e.style.display=""});renderWatchHistory();window.scrollTo({top:0,behavior:"smooth"})}
+    async function openCatalogPage(type,slug,title,page=1){cType=type;cSlug=slug;cTitle=title;cPage=page;document.querySelectorAll(".filter-dropdown").forEach(e=>e.classList.add("hidden"));document.querySelectorAll("main > *:not(#genrePageSection), header ~ div:not(#genrePageSection)").forEach(e=>{if(e.id!=="genrePageSection"&&!e.id.includes("footer")&&!e.contains(document.getElementById("genrePageSection")))e.style.display="none"});const s=document.getElementById("genrePageSection"),h=document.getElementById("genrePageHeading"),g=document.getElementById("genreMoviesGrid"),ind=document.getElementById("genrePageIndicator"),b=document.getElementById("genreTotalBadge"),pB=document.getElementById("genrePrevBtn"),nB=document.getElementById("genreNextBtn");if(!s||!g)return;s.classList.remove("hidden");h.textContent=title;g.innerHTML=`<div class="col-span-full py-20 text-center text-neutral-400 text-sm">Đang tải ${title}...</div>`;window.scrollTo({top:0,behavior:"smooth"});try{const res=await fetch(`https://phimapi.com/v1/api/${type}/${slug}?page=${page}&limit=24`),d=await res.json(),items=d?.data?.items||d?.items||[],pg=d?.data?.params?.pagination||{};maxPages=pg.totalPages||Math.ceil((pg.totalItems||100)/(pg.totalItemsPerPage||24))||10;ind.textContent=`Trang ${page} / ${maxPages}`;b.textContent=`Trang ${page} / ${maxPages}`;pB.disabled=page<=1;nB.disabled=page>=maxPages;g.innerHTML=items.length?items.map(m=>{const p=m.poster_url||m.thumb_url||"",img=p.startsWith("http")?p:`https://phimimg.com/${p}`,sn=(m.name||"").replace(/'/g,"\'");return `<div class="cursor-pointer flex flex-col" onclick="openMovieWithHistory('${m.slug}','${sn}','${img}','${m.episode_current||""}')"><div class="relative aspect-[2/3] rounded-xl overflow-hidden bg-neutral-800"><img src="${img}" class="w-full h-full object-cover" loading="lazy"/>${m.episode_current?`<span class="absolute top-1 left-1 bg-red-600 text-white text-[10px] font-bold px-1.5 rounded">${m.episode_current}</span>`:""}</div><h4 class="mt-1.5 text-xs font-semibold text-neutral-100 truncate">${m.name}</h4></div>`}).join(""):`<div class="col-span-full py-20 text-center text-neutral-400">Trống</div>`}catch(e){g.innerHTML=`<div class="col-span-full py-20 text-center text-red-400">Lỗi: ${e.message}</div>`}}
+    function changeCatalogPage(o){const t=cPage+o;if(t>=1&&t<=maxPages)openCatalogPage(cType,cSlug,cTitle,t)}
+    </script><!-- GENRE_SCRIPT_END -->
 </body>
 </html>
 <!-- autodeploy-test-phim -->
